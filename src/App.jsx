@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import WorkflowTester from "./components/WorkflowTester";
+import { ErrorBoundary } from "./lib/errorUtils";
 
 // Default workflow for background removal and segmentation
 const defaultWorkflow = {
@@ -129,10 +130,14 @@ const App = () => {
               onWorkflowChange={setCustomWorkflow}
             />
           ) : (
-            <WorkflowTester
-              initialWorkflow={workflowOptions[selectedWorkflow].workflow}
-              title={workflowOptions[selectedWorkflow].name}
-            />
+            <ErrorBoundary
+              onError={(error) => addDebugLog(`Fatal error: ${error.message}`)}
+            >
+              <WorkflowTester
+                initialWorkflow={workflowOptions[selectedWorkflow].workflow}
+                title={workflowOptions[selectedWorkflow].name}
+              />
+            </ErrorBoundary>
           )}
         </div>
       </div>

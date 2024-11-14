@@ -15,6 +15,10 @@ export const styles = {
     fontWeight: "bold",
     marginBottom: "10px",
   },
+  uploadContainer: {
+    position: "relative",
+    marginBottom: "20px",
+  },
   uploadSection: {
     border: "2px dashed #ccc",
     borderRadius: "8px",
@@ -22,6 +26,46 @@ export const styles = {
     textAlign: "center",
     marginBottom: "20px",
     cursor: "pointer",
+    minHeight: "200px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  uploadSectionWithPreview: {
+    padding: "10px",
+    cursor: "default",
+  },
+  uploadActive: {
+    borderColor: "#007bff",
+    backgroundColor: "#f8f9fa",
+  },
+  previewContainer: {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+  },
+  previewImage: {
+    maxWidth: "100%",
+    maxHeight: "300px",
+    objectFit: "contain",
+    borderRadius: "4px",
+  },
+  clearButton: {
+    position: "absolute",
+    top: "-10px",
+    right: "-10px",
+    backgroundColor: "#ff4444",
+    color: "white",
+    border: "none",
+    borderRadius: "50%",
+    width: "24px",
+    height: "24px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "0",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
   },
   uploadActive: {
     borderColor: "#007bff",
@@ -85,12 +129,30 @@ export const styles = {
   },
   debugPanel: {
     backgroundColor: "#f8f9fa",
-    padding: "10px",
-    marginTop: "10px",
-    borderRadius: "4px",
-    fontFamily: "monospace",
+    padding: "12px",
+    marginTop: "20px",
+    borderRadius: "6px",
+    fontFamily:
+      "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
     fontSize: "12px",
-    maxHeight: "200px",
+    maxHeight: "300px",
     overflowY: "auto",
+    border: "1px solid #e5e7eb",
+    scrollBehavior: "smooth",
+    // Add custom scrollbar styling
+    "&::-webkit-scrollbar": {
+      width: "8px",
+    },
+    "&::-webkit-scrollbar-track": {
+      backgroundColor: "#f1f1f1",
+      borderRadius: "4px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#c1c1c1",
+      borderRadius: "4px",
+      "&:hover": {
+        backgroundColor: "#a8a8a8",
+      },
+    },
   },
 };

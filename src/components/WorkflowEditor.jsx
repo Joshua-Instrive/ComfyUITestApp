@@ -3,12 +3,12 @@ import { styles } from "../styles/workflowStyles";
 
 const WorkflowEditor = ({ workflow, onChange }) => {
   const handleChange = (e) => {
-    try {
-      const parsed = JSON.parse(e.target.value);
-      onChange(parsed);
-    } catch (error) {
-      // Allow invalid JSON while typing
-      onChange(e.target.value);
+    const result = validateWorkflowJSON(e.target.value);
+    if (!result.isValid) {
+      setError(result.error);
+    } else {
+      setError(null);
+      onChange(result.workflow);
     }
   };
 

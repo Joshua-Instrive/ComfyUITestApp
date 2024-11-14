@@ -50,39 +50,20 @@ export class ComfyUIClient {
   }
 
   async queuePrompt(workflow, clientId, uploadedImage) {
-    // If there's an uploaded image, modify the workflow to use it
-    let modifiedWorkflow = JSON.parse(JSON.stringify(workflow));
+    try {
+      const response = await fetch(`${this.host}/prompt`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    // Find the LoadImage node
-    const loadImageNode = Object.entries(modifiedWorkflow).find(
-      ([_, node]) => node.class_type === "LoadImage"
-    );
-
-    if (loadImageNode && uploadedImage) {
-      loadImageNode[1].inputs.image = uploadedImage.name;
+      await handleApiError(response);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      this.log("Error queueing prompt:", error);
+      throw error;
     }
-
-    const payload = {
-      prompt: modifiedWorkflow,
-      client_id: clientId,
-    };
-
-    this.log("Queueing prompt:", payload);
-
-    const response = await fetch(`${this.host}/prompt`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(JSON.stringify(error, null, 2));
-    }
-
-    const data = await response.json();
-    this.log("Prompt queued:", data);
-    return data;
   }
 
   trackProgress(promptId, onProgress) {
