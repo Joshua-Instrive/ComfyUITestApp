@@ -140,19 +140,51 @@ export const styles = {
     border: "1px solid #e5e7eb",
     scrollBehavior: "smooth",
     // Add custom scrollbar styling
-    "&::-webkit-scrollbar": {
+    "&::WebkitScrollbar": {
       width: "8px",
     },
-    "&::-webkit-scrollbar-track": {
+    "&::WebkitScrollbarTrack": {
       backgroundColor: "#f1f1f1",
       borderRadius: "4px",
     },
-    "&::-webkit-scrollbar-thumb": {
+    "&::WebkitScrollbarThumb": {
       backgroundColor: "#c1c1c1",
       borderRadius: "4px",
       "&:hover": {
         backgroundColor: "#a8a8a8",
       },
     },
+  },
+  workflowContainer: {
+    backgroundColor: "white",
+    borderRadius: "8px",
+    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+    padding: "20px",
+    marginBottom: "20px",
+  },
+  workflowSelectionContainer: {
+    marginBottom: "20px",
+  },
+  workflowLabel: {
+    display: "block",
+    fontSize: "0.875rem",
+    fontWeight: "500",
+    color: "#374151",
+    marginBottom: "8px",
+  },
+  workflowSelect: {
+    width: "100%",
+    padding: "8px 12px",
+    borderRadius: "4px",
+    border: "1px solid #d1d5db",
+    backgroundColor: "white",
+    fontSize: "0.875rem",
+    color: "#374151",
+    cursor: "pointer",
+  },
+  divider: {
+    margin: "20px 0",
+    border: "none",
+    borderTop: "1px solid #e5e7eb",
   },
 };

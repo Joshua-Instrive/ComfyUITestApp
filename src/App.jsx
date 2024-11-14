@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import WorkflowTester from "./components/WorkflowTester";
 import { ErrorBoundary } from "./lib/errorUtils";
+import AuthenticatedLayout from "./components/AuthenticatedLayout";
+import LoginForm from "./components/LoginForm";
+import { checkAuth } from "./lib/authUtils";
+import { styles } from "./styles/workflowStyles";
 
 // Default workflow for background removal and segmentation
 const defaultWorkflow = {
@@ -93,8 +97,17 @@ const defaultWorkflow = {
 };
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedWorkflow, setSelectedWorkflow] = useState("default");
   const [customWorkflow, setCustomWorkflow] = useState("");
+
+  useEffect(() => {
+    setIsAuthenticated(checkAuth());
+  }, []);
+
+  const handleLogin = (token) => {
+    setIsAuthenticated(true);
+  };
 
   const workflowOptions = {
     default: {
@@ -104,44 +117,44 @@ const App = () => {
     // Add more predefined workflows here if needed
   };
 
+  if (!isAuthenticated) {
+    return <LoginForm onLogin={handleLogin} />;
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h1 className="text-2xl font-bold mb-4">ComfyUI Workflow Manager</h1>
-
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Select Workflow
-            </label>
-            <select
-              className="w-full p-2 border rounded-md"
-              value={selectedWorkflow}
-              onChange={(e) => setSelectedWorkflow(e.target.value)}
-            >
-              <option value="default">Background Removal & Segmentation</option>
-              <option value="custom">Custom Workflow</option>
-            </select>
-          </div>
-
-          {selectedWorkflow === "custom" ? (
-            <WorkflowTester
-              initialWorkflow={customWorkflow}
-              onWorkflowChange={setCustomWorkflow}
-            />
-          ) : (
-            <ErrorBoundary
-              onError={(error) => addDebugLog(`Fatal error: ${error.message}`)}
-            >
-              <WorkflowTester
-                initialWorkflow={workflowOptions[selectedWorkflow].workflow}
-                title={workflowOptions[selectedWorkflow].name}
-              />
-            </ErrorBoundary>
-          )}
+    <AuthenticatedLayout>
+      <div style={styles.workflowContainer}>
+        {/* Workflow Selection Section */}
+        <div style={styles.workflowSelectionContainer}>
+          <label style={styles.workflowLabel}>Select Workflow</label>
+          <select
+            style={styles.workflowSelect}
+            value={selectedWorkflow}
+            onChange={(e) => setSelectedWorkflow(e.target.value)}
+          >
+            <option value="default">Background Removal & Segmentation</option>
+            <option value="custom">Custom Workflow</option>
+          </select>
         </div>
+
+        <hr style={styles.divider} />
+
+        {/* Workflow Tester Section */}
+        {selectedWorkflow === "custom" ? (
+          <WorkflowTester
+            initialWorkflow={customWorkflow}
+            onWorkflowChange={setCustomWorkflow}
+          />
+        ) : (
+          <ErrorBoundary>
+            <WorkflowTester
+              initialWorkflow={workflowOptions[selectedWorkflow].workflow}
+              title={workflowOptions[selectedWorkflow].name}
+            />
+          </ErrorBoundary>
+        )}
       </div>
-    </div>
+    </AuthenticatedLayout>
   );
 };
 

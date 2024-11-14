@@ -1,8 +1,19 @@
+import { getAuthToken } from "./authUtils";
+import { handleApiError } from "./errorUtils";
+
 export class ComfyUIClient {
   constructor(host = "http://127.0.0.1:8188") {
     this.host = host;
     this.ws = null;
     this.debug = true;
+  }
+
+  getHeaders() {
+    const token = getAuthToken();
+    return {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
   }
 
   log(message, data = null) {
@@ -38,6 +49,9 @@ export class ComfyUIClient {
 
     const response = await fetch(`${this.host}/upload/image`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
       body: formData,
     });
 
@@ -51,14 +65,43 @@ export class ComfyUIClient {
 
   async queuePrompt(workflow, clientId, uploadedImage) {
     try {
+      // Create a deep copy of the workflow to avoid modifying the original
+      let modifiedWorkflow =
+        typeof workflow === "string"
+          ? JSON.parse(workflow)
+          : JSON.parse(JSON.stringify(workflow));
+
+      // Find the LoadImage node
+      const loadImageNode = Object.entries(modifiedWorkflow).find(
+        ([_, node]) => node.class_type === "LoadImage"
+      );
+
+      // Update the image input if we have both a LoadImage node and an uploaded image
+      if (loadImageNode && uploadedImage) {
+        const [nodeId] = loadImageNode;
+        modifiedWorkflow[nodeId].inputs.image = uploadedImage.name;
+      }
+
+      const payload = {
+        prompt: modifiedWorkflow,
+        client_id: clientId,
+      };
+
+      this.log("Queueing prompt:", payload);
+
       const response = await fetch(`${this.host}/prompt`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      await handleApiError(response);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(JSON.stringify(error, null, 2));
+      }
+
       const data = await response.json();
+      this.log("Prompt queued:", data);
       return data;
     } catch (error) {
       this.log("Error queueing prompt:", error);
@@ -116,7 +159,9 @@ export class ComfyUIClient {
   }
 
   async getHistory(promptId) {
-    const response = await fetch(`${this.host}/history/${promptId}`);
+    const response = await fetch(`${this.host}/history/${promptId}`, {
+      headers: this.getHeaders(),
+    });
     if (!response.ok) {
       throw new Error(`History fetch failed: ${response.status}`);
     }
@@ -124,7 +169,6 @@ export class ComfyUIClient {
     this.log("History data:", data);
     return data;
   }
-
   getImageUrl(filename, subfolder, type = "output") {
     const params = new URLSearchParams({
       filename,
