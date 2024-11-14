@@ -1,27 +1,28 @@
 import React from "react";
+import { styles } from "../styles/workflowStyles";
 
 const ProgressIndicator = ({ progress }) => {
   if (!progress) return null;
 
   return (
-    <div className="mt-4 p-4 bg-gray-100 rounded-lg">
+    <div style={styles.progressContainer}>
       {progress.type === "progress" && (
-        <div className="flex items-center gap-2">
-          <div className="w-full bg-gray-200 rounded-full h-2.5">
+        <div style={styles.progressBar}>
+          <div style={styles.progressBarTrack}>
             <div
-              className="bg-blue-600 h-2.5 rounded-full"
-              style={{ width: `${(progress.value / progress.max) * 100}%` }}
-            ></div>
+              style={{
+                ...styles.progressBarFill,
+                width: `${(progress.value / progress.max) * 100}%`,
+              }}
+            />
           </div>
-          <span className="text-sm text-gray-600">
+          <span style={styles.progressText}>
             {Math.round((progress.value / progress.max) * 100)}%
           </span>
         </div>
       )}
       {progress.type === "executing" && (
-        <p className="text-sm text-gray-600">
-          Processing node: {progress.node}
-        </p>
+        <p style={styles.progressStatus}>Processing node: {progress.node}</p>
       )}
     </div>
   );

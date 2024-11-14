@@ -15,15 +15,15 @@ const DebugPanel = ({ logs }) => {
 
   return (
     <div style={styles.debugPanel} ref={scrollRef}>
-      <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-semibold">Debug Log:</h3>
+      <div style={styles.debugPanelHeader}>
+        <h3 style={styles.debugPanelTitle}>Debug Log:</h3>
         <button
           onClick={() => {
             if (bottomRef.current) {
               bottomRef.current.scrollIntoView({ behavior: "smooth" });
             }
           }}
-          className="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 rounded"
+          style={styles.debugPanelScrollButton}
         >
           Scroll to Latest
         </button>
@@ -32,13 +32,15 @@ const DebugPanel = ({ logs }) => {
       {logs.map((log, index) => (
         <div
           key={index}
-          className="text-xs text-gray-600 py-1 border-b border-gray-100 last:border-0"
+          style={{
+            ...styles.debugLogEntry,
+            ...(index === logs.length - 1 ? styles.lastDebugLogEntry : {}),
+          }}
         >
           {log}
         </div>
       ))}
 
-      {/* Invisible element for auto-scrolling */}
       <div ref={bottomRef} />
     </div>
   );

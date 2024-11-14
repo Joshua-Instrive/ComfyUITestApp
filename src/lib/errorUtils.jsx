@@ -1,4 +1,5 @@
 import React from "react";
+import { styles } from "../styles/workflowStyles";
 
 // lib/errorUtils.js
 export const validateWorkflowJSON = (jsonString) => {
@@ -75,12 +76,12 @@ export const ErrorBoundary = ({ children, onError }) => {
 
   if (hasError) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-md p-4">
-        <h3 className="text-red-800 font-medium">Something went wrong</h3>
-        <p className="text-red-600 text-sm mt-1">{error?.message}</p>
+      <div style={styles.errorBoundary}>
+        <h3 style={styles.errorBoundaryTitle}>Something went wrong</h3>
+        <p style={styles.errorBoundaryMessage}>{error?.message}</p>
         <button
           onClick={() => setHasError(false)}
-          className="mt-2 text-sm text-red-700 hover:text-red-800"
+          style={styles.errorBoundaryButton}
         >
           Try again
         </button>

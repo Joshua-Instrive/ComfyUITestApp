@@ -187,4 +187,85 @@ export const styles = {
     border: "none",
     borderTop: "1px solid #e5e7eb",
   },
+  debugPanelHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "8px",
+  },
+  debugPanelTitle: {
+    fontSize: "14px",
+    fontWeight: "600",
+  },
+  debugPanelScrollButton: {
+    fontSize: "12px",
+    padding: "4px 8px",
+    backgroundColor: "#e5e7eb",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+  },
+  debugLogEntry: {
+    fontSize: "12px",
+    color: "#4b5563",
+    padding: "4px 0",
+    borderBottom: "1px solid #f0f0f0",
+  },
+  lastDebugLogEntry: {
+    borderBottom: "none",
+  },
+  progressContainer: {
+    marginTop: "16px",
+    padding: "16px",
+    backgroundColor: "#f3f4f6",
+    borderRadius: "8px",
+  },
+  progressBar: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  },
+  progressBarTrack: {
+    width: "100%",
+    backgroundColor: "#e5e7eb",
+    borderRadius: "9999px",
+    height: "10px",
+  },
+  progressBarFill: {
+    backgroundColor: "#2563eb",
+    height: "10px",
+    borderRadius: "9999px",
+    transition: "width 0.2s",
+  },
+  progressText: {
+    fontSize: "14px",
+    color: "#4b5563",
+  },
+  progressStatus: {
+    fontSize: "14px",
+    color: "#4b5563",
+  },
+  errorBoundary: {
+    backgroundColor: "#fee2e2",
+    border: "1px solid #fecaca",
+    borderRadius: "6px",
+    padding: "16px",
+  },
+  errorBoundaryTitle: {
+    color: "#991b1b",
+    fontWeight: "500",
+  },
+  errorBoundaryMessage: {
+    color: "#dc2626",
+    fontSize: "14px",
+    marginTop: "4px",
+  },
+  errorBoundaryButton: {
+    marginTop: "8px",
+    fontSize: "14px",
+    color: "#b91c1c",
+    backgroundColor: "transparent",
+    border: "none",
+    cursor: "pointer",
+  },
 };
