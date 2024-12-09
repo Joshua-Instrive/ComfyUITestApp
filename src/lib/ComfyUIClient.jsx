@@ -2,7 +2,7 @@ import { getAuthToken } from "./authUtils";
 import { handleApiError } from "./errorUtils";
 
 export class ComfyUIClient {
-  constructor(host = "http://127.0.0.1:8188") {
+  constructor(host = "http://165.173.4.30:8188") {
     this.host = host;
     this.ws = null;
     this.debug = true;
@@ -115,7 +115,6 @@ export class ComfyUIClient {
 
       this.ws.onmessage = async (event) => {
         const message = JSON.parse(event.data);
-        this.log("WebSocket message received:", message);
 
         switch (message.type) {
           case "progress":

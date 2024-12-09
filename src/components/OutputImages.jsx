@@ -10,18 +10,20 @@ const OutputImages = ({ images, addDebugLog }) => {
         <div key={index} style={styles.imageContainer}>
           <img
             src={image.url}
-            alt={`Output ${index + 1}`}
+            alt={`${image.filename} output`}
             style={styles.image}
             onLoad={() => addDebugLog(`Image loaded: ${image.url}`)}
             onError={() => addDebugLog(`Failed to load image: ${image.url}`)}
           />
-          <p style={styles.imageLabel}>
-            {index === 0
-              ? "Original with Background Removed"
-              : index === 1
-              ? "Segmented Image"
-              : "Segmentation Mask"}
-          </p>
+          <div style={styles.imageInfo}>
+            <p style={styles.imageLabel}>{image.filename}</p>
+            {image.dimensions && (
+              <p style={styles.imageMeta}>Size: {image.dimensions}</p>
+            )}
+            {image.text && (
+              <p style={styles.imageMeta}>Details: {image.text}</p>
+            )}
+          </div>
         </div>
       ))}
     </div>

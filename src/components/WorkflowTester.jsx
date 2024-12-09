@@ -106,11 +106,21 @@ const WorkflowTester = ({
       // Track progress and wait for completion
       const history = await client.trackProgress(prompt_id, handleProgress);
 
+      // Log the complete history for debugging
+      console.log("Full history object:", history);
+
       if (history && history[prompt_id]) {
-        const outputs = history[prompt_id].outputs;
-        addDebugLog(`Processing ${Object.keys(outputs).length} outputs`);
+        const promptData = history[prompt_id];
+        const { outputs, prompt } = promptData;
+
+        // Get the workflow data from the prompt array's third element (index 2)
+        const workflowData = prompt[2];
+
+        addDebugLog(`Processing outputs: ${JSON.stringify(outputs)}`);
 
         const newImages = [];
+
+        // Process each output node
         for (const [nodeId, output] of Object.entries(outputs)) {
           if (output.images) {
             for (const image of output.images) {
@@ -119,13 +129,47 @@ const WorkflowTester = ({
                 image.subfolder,
                 image.type
               );
-              addDebugLog(`Generated image URL: ${imageUrl}`);
+
+              // Get the node's metadata from the workflow data
+              const nodeInfo = workflowData[nodeId];
+              const nodeTitle =
+                nodeInfo?._meta?.title ||
+                nodeInfo?.class_type ||
+                "Unknown Node";
+
+              // Get additional node-specific data
+              let additionalInfo = {};
+
+              // For text outputs (like from ShowText nodes)
+              if (output.text) {
+                additionalInfo.text = output.text[0];
+              }
+
+              // Add image dimensions if available (from GetImageSizeAndCount nodes)
+              if (
+                output.text &&
+                nodeInfo?.class_type === "GetImageSizeAndCount"
+              ) {
+                additionalInfo.dimensions = output.text[0];
+              }
+
+              addDebugLog(
+                `Generated image from node ${nodeId} (${nodeTitle}): ${imageUrl}`
+              );
+
               newImages.push({
                 nodeId,
                 url: imageUrl,
                 filename: image.filename,
+                nodeTitle,
+                ...additionalInfo,
               });
             }
+          }
+
+          // Handle text outputs even if there are no images
+          if (output.text) {
+            addDebugLog(`Text output from node ${nodeId}: ${output.text[0]}`);
           }
         }
 
